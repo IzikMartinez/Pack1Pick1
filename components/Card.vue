@@ -9,8 +9,8 @@
 </template>
 
 <script setup lang="ts">
-import {card} from 'composables/types/card';
 import { Record } from 'pocketbase';
+import {watch} from "@vue/runtime-core";
 
 const picks = usePickStore()
 const props = defineProps<{
@@ -23,6 +23,7 @@ const emit = defineEmits<{
 }>()
 
 const cardClass = computed(()=>'card-' +useCardClass().value )
+
 const artPath = ref("")
 
 function addPick() {
