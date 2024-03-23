@@ -1,10 +1,10 @@
 <template>
   <!-- store.cardSizeClass.at(0) returns the class, "card", "card-sml", or "card-big".
   It will return "card" by default.  -->
-  <span :class="cardClass" @click="addPick">
+  <div :class="cardClass" @click="addPick">
       <CardTooltip group-hover="xl:scale-100 scale-0 z-0 delay-700" :card-props="cardProps"/>
       <CardImage :record_id="cardProps" :card_name="cardProps.card_name" :cart_art="cardProps.card_art"/>
-  </span>
+  </div>
 
 </template>
 
@@ -49,7 +49,7 @@ function addPick() {
 
 .card-small {
   @apply 
-  flex relative items-center justify-center text-center
+  flex flex-1 relative items-center justify-center text-center
   my-0 p-0.5
   xl:(w-60 h-84)
   w-30 h-42
@@ -57,7 +57,7 @@ function addPick() {
 }
 .card-medium {
   @apply 
-  flex relative items-center justify-center text-center
+  flex flex-1 items-center justify-center text-center
   m-0 p-0.5
   xl:(w-68 h-95)
   w-40 h-54
@@ -65,7 +65,7 @@ function addPick() {
 }
 .card-large {
   @apply 
-  flex relative items-center justify-center text-center
+  flex flex-1 items-center justify-center text-center
   m-0 p-0.5
   xl:(w-88 h-123)
   w-70 h-96

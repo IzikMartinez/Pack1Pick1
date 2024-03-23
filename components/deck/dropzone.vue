@@ -4,15 +4,15 @@
     @drop="onDrop($event)"
     @dragover.prevent
     @dragenter.prevent
-    @click="bladeSwitch = !bladeSwitch"
     >
-        <span v-if="deck.length === 0"> Drag cards here... </span>
-        <span v-else class="flex flex-col items-center h-screen pt-2">
+        <DeckCollapsebtn/>
+        <div v-if="deck.length === 0" :class="placeholderClass"> Drag cards here... </div>
+        <div v-else :class="['flex', 'flex-col', dynamicStartCenter, 'w-full', 'h-screen', dynamicPadding]">
             <DeckSize :decksize="decksize"/>
-            <span v-for="card in deck">
-                <DeckCard :card-props="card" @emitted-card-name="handleEmit"/>
-            </span>
-        </span>
+            <div class="flex w-full items-start justify-center " v-for="card in deck">
+                  <DeckCard :card-props="card" @emitted-card-name="handleEmit"/>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -39,7 +39,9 @@ const decksize = computed(()=> {
 })
 const bladeSwitch = useBladeSwitch()
 const bladeClass = computed(()=> bladeSwitch.value ? 'blade' : 'blade-clps')
-const btnClass = computed(()=> bladeSwitch.value ? "blade-btn-col" : "blade-btn")
+const dynamicStartCenter = computed(()=> bladeSwitch.value ? "items-center" : "items-start")
+const dynamicPadding = computed(()=> bladeSwitch.value ? "pt-2" : "pl-4")
+const placeholderClass = computed(()=> bladeSwitch.value ? "placeholder" : "placeholder-clps")
 
 
 function onDrop(event: DragEvent) {
@@ -103,14 +105,14 @@ function addCardToDeck(card: Record) {
 
 </script>
 
-<style>
+<style scoped>
 .blade {
- @apply fixed flex 
- w-40 xl:w-80 md:w-50
- h-screen right-0 
+ @apply flex flex-col
+ w-1/4 xl:w-2/12 md:w-50
+ h-screen mr-16
  xl:top-14 md:top-10 top-28 
  bg-blue-gray-600 hover:bg-blue-gray-700 
- text-center justify-center 
+ text-center items-center justify-start
  font-display text-xl text-white
  overflow-auto scrollbar scrollbar-w-0
  transition-all duration-150 
@@ -118,11 +120,24 @@ function addCardToDeck(card: Record) {
 }
 
 .blade-clps {
- @apply fixed flex w-10 xl:w-80 h-screen right-0 
- xl:top-14 top-28 bg-blue-gray-600 xl:hover:bg-blue-gray-600 hover:bg-teal-600 
- text-center justify-center font-display text-xl text-white
- transition-all duration-150
+ @apply
+ flex flex-col
+ w-10 h-screen right-0
+ xl:(top-14 hover:bg-blue-gray-700 w-1/12)
+ top-28 bg-blue-gray-600  hover:bg-teal-600
+ text-center justify-start items-start font-display text-xl text-white
+ transition-all duration-250
 }
+
+
+.placeholder {
+  @apply
+}
+
+.placeholder-clps {
+  @apply invisible
+}
+
 
 .blade-btn {
     @apply bg-teal-700 hover:bg-teal-500 active:bg-teal-300 h-10 w-12 top-28 right-66 flex fixed rounded-l-lg cursor-pointer

@@ -37,9 +37,9 @@ function removeClick() {
 
 <style scoped>
 .card-clps {
-    @apply fixed relative flex flex-row justify-center items-center my-1 w-0 xl:w-70
+    @apply invisible
 }
 .card {
-    @apply fixed relative flex flex-row justify-center items-center my-1 w-58 xl:w-70
+    @apply flex flex-row justify-center items-center mt-2 w-58 xl:w-10/12 selection-none
 }
 </style>

@@ -1,12 +1,15 @@
 <template>
     <NuxtLayout name="sealed">
-        <span v-if="pending">Loading..</span>
-        <span v-else class="fixed flex flex-row flex-wrap w-10/12 h-screen xl:(top-16 left-18 pb-16) overflow-y-scroll overflow-x-hidden z-0">
-                <div v-for="card in searchPicks" class="overflow-auto" @dragstart="startDrag($event, card)">
-                    <Card :card-props="card" :picked-flag="true" />
-                </div>
-        </span>
-        <DeckDropzone />
+        <div v-if="pending">Loading..</div>
+        <div v-else class="flex fixed w-screen h-screen top-14 left-16 items-center justify-end">
+          <div class="flex flex-wrap flex-1 h-full overflow-y-scroll overflow-x-hidden hide-scrollbar z-0 items-center justify-center">
+            <span v-for="card in searchPicks"
+                 @dragstart="startDrag($event, card)">
+                <Card :card-props="card" :picked-flag="true"/>
+            </span>
+          </div>
+          <DeckDropzone />
+        </div>
     </NuxtLayout>
 </template>
 
@@ -45,3 +48,13 @@ onBeforeMount(()=>{
         pack => pack.forEach(card => picks.addPick(card as Record)))
 })
 </script>
+
+<style>
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
