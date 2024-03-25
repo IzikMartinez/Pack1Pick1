@@ -7,16 +7,12 @@ type Box = {
 }
 
 export class RoundBuilder {
-    private index = 0
-    private round: Round = {
-        index: this.index,
-        packs: []
-    };
-    makePack(pack_id: number, cards: Record[]) {
-        return {
-            pack_id: pack_id,
-            cards: cards
-        }
+    private round: Round
+    constructor(index: number) {
+        this.round = {
+            index: index,
+            packs: []
+        };
     }
 
     useBuildRound(): Round {
@@ -27,7 +23,6 @@ export class RoundBuilder {
             this.round.packs.push(packBuilder.useBuildPack())
         }
         // increment index
-        this.round.index = this.index++;
         return this.round;
     }
 

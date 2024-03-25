@@ -11,7 +11,7 @@ const fetchData = async ()=> {
         console.error(error)
     }
 }
-class Draft {
+export class Draft {
     box: Box = {
         rounds: []
     }
@@ -21,8 +21,9 @@ class Draft {
         // append the packs to the box
         // return the box
         await fetchData()
-        const roundBuiler = new RoundBuilder()
+        const cardData = useState('card-data', () => allRecords)
         for (let i = 0; i < 3; i++) {
+            const roundBuiler = new RoundBuilder(i)
             this.box.rounds.push(roundBuiler.useBuildRound());
         }
         const draftBox = useState('draft-box', () => this.box)

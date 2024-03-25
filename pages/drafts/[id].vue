@@ -16,14 +16,17 @@
 <script setup lang="ts">
 
 
+import {Draft} from "~/composables/useBuildDraft";
+
 const route = useRoute()
 const store = usePickStore()
 const styles = useStyleStore()
 const timerStore = useTimerStore()
+const draft = new Draft()
 
 const SET_NAME = route.params.id as string
 
-await useBuildDraft()
+await draft.useBuildDraft()
 const {data, pending, error} = await useAsyncData('cards',
   ()=> useRecords
 )
