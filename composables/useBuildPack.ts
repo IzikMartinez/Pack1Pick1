@@ -366,18 +366,14 @@ const outsider_hybrids: classesAndOdds[] = [
 
 
 export class PackBuilder {
-    private index = 0;
     useBuildPack(): Pack {
         const cardData = useState('card-data').value as Record[]
         const cardmap = useCardMap().value as CardMap[]
 
         let pack: Pack = {
-            index: this.index,
             cards: []
         }
-        this.index++;
         if(cardData){
-
 
         let ninjaCount = 0
         let assassinCount = 0

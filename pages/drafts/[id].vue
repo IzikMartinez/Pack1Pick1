@@ -2,10 +2,10 @@
   <NuxtLayout>
     <div id="card-box" >
       <transition name="cardbody" appear>
-        <span v-if="cardData=== null">LOADING LOADING LOADING</span>
-        <span v-else>
-            <CardBox @cardbox-clicked="onCardEvent('clicked')" ref="cardboxRef" :set_name="SET_NAME"/>
+        <span v-if="cardData">
+        <CardBox @cardbox-clicked="onCardEvent('clicked')" ref="cardboxRef" :set_name="SET_NAME"/>
         </span>
+        <span v-else class="text-5xl text-white flex items-center justify-center">LOADING LOADING LOADING</span>
       </transition>
     </div>
   </NuxtLayout>
@@ -14,18 +14,30 @@
 <script setup lang="ts">
 
 
-import {Draft} from "~/composables/useBuildDraft";
+import {Record} from "pocketbase";
+const allRecords = ref<Record[]>([])
+
+const fetchData = async ()=> {
+  try {
+    const records = await useRecords;
+    allRecords.value = records;
+  } catch (error) {
+    console.error(error)
+  }
+}
+const cardData = useState('card-data')
+
+await fetchData().then(()=>{
+  cardData.value = allRecords
+})
 
 const route = useRoute()
 const store = usePickStore()
 const styles = useStyleStore()
 const timerStore = useTimerStore()
-const draft = new Draft()
 
 const SET_NAME = route.params.id as string
 
-await draft.useBuildDraft()
-const cardData = useState('card-data')
 const roundIndex = useRoundIndex()
 
 //console.log(useRoundStore().value);

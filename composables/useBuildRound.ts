@@ -1,18 +1,11 @@
-import { Record } from 'pocketbase'
 import {Pack, Round} from "~/composables/types/draft_types";
 import {PackBuilder} from "~/composables/useBuildPack";
 
-type Box = {
-    packs: Record[][]
-}
-
 export class RoundBuilder {
-    private round: Round
-    constructor(index: number) {
-        this.round = {
-            index: index,
-            packs: []
-        };
+    private round: Round = {
+        packs: []
+    }
+    constructor() {
     }
 
     useBuildRound(): Round {

@@ -3,7 +3,7 @@
       <div>
         <DraftInfo class="fixed xl:(top-0 left-auto) top-18 left-24 justify-center" ref="infoRef"/>
         <span :class="cardBoxClass" >
-          <div v-for="card in current_pack!.cards" :key="card.card_in_pack">
+          <div v-for="card in currentPack.cards" :key="card.card_in_pack">
               <Card 
                 :card-props="card" 
                 :picked-flag="false"
@@ -12,6 +12,7 @@
               </Card>
           </div>
         </span>
+      -->
       </div>
     </div>
 </template>
@@ -19,6 +20,7 @@
 <script setup lang="ts">
 import { Record } from 'pocketbase';
 import Picker from '~~/composables/picker';
+import {Draft} from "~/composables/useBuildDraft";
 
 const PACK_SIZE=14
 const PLAYER_NUM=7
@@ -27,37 +29,43 @@ const props = defineProps<{
   set_name: string
 }>()
 
-const cardDataStore = useState('card-data', () => data)
 const store = usePickStore()
-watch(
-    ()=> cardDataStore.value,
-    (newValue, oldValue) => {
-      console.log(newValue)
-      console.log(oldValue)
-    }
-)
-const thisdraft = useDraft()
 const timerStore = useTimerStore()
+//const cardDataStore = useState('card-data', () => data)
+const draft = new Draft()
 const roundIndex = useRoundIndex().value
-
-const currentRound = useRoundStore().value as Record[][]
+const currentRound =  computed(()=> draft.box.rounds[roundIndex])
+const current_pack_index = computed(()=>store.getPickIndex % PLAYER_NUM)
+const currentPack = computed(()=> currentRound.value.packs[current_pack_index.value])
 
 const cardBoxClass = computed(()=> 'cardbox-' + useCardBoxClass().value)
-const current_pack_index = computed(()=>store.getPickIndex % PLAYER_NUM)
+
+
+const picker: Picker = new Picker(thisdraft, roundIndex, current_pack_index.value)
+const emit = defineEmits(['cardboxClicked'])
+defineExpose({ timeoutPick })
+function clickPick(card_in_pack: Record ) {
+  if(card_in_pack != null) {
+    emit('cardboxClicked')
+    timerStore.setTimer(store.getInversePickIndex)
+    pick(card_in_pack)
+  }
+}
+function pick(card_in_pack_id: Record) {
+  currentPack.value?.removePick(card_in_pack_id.id)
+  usePickCards(roundIndex)!, current_pack.value!.pack_id)
+  store.incrementIndex()
+}
+/*
+const thisDraft = useState('draft-box').value
+
 const current_pack = computed(()=> { return currentRound[current_pack_index.value]})
 console.log(current_pack.value)
 //const current_pack = computed(()=> { return thisdraft.getRound(roundIndex)?.getPack(current_pack_index.value)})
 //const pick_number = computed(()=> (store.getPickIndex % PACK_SIZE))
-const picker: Picker = new Picker(thisdraft, roundIndex, current_pack_index.value)
 
-const emit = defineEmits(['cardboxClicked'])
-defineExpose({ timeoutPick })
 
-function pick(card_in_pack_id: Record) {
-    current_pack.value?.removePick(card_in_pack_id.id)
-    usePickCards(thisdraft.getRound(roundIndex)!, current_pack.value!.pack_id)
-    store.incrementIndex()
-}
+
 
 function getRandomInt(max: number, min: number): number {
         let num = Math.floor(Math.random() * max)// start at 1
@@ -71,13 +79,9 @@ function timeoutPick() {
   pick(current_pack.value?.Cards.at(idx)!)
 }
 
-function clickPick(card_in_pack: Record ) {
-  if(card_in_pack != null) {
-    emit('cardboxClicked')
-    timerStore.setTimer(store.getInversePickIndex)
-    pick(card_in_pack)
-  }
-}
+
+
+ */
 
 
 </script>
