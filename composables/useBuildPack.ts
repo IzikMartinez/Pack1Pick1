@@ -1,6 +1,7 @@
 import {card} from "composables/types/card";
 import { Record } from "pocketbase";
 import { CardImage } from "~~/.nuxt/components";
+import {Pack} from "~/composables/types/draft_types";
 
 type CardMap = {
     id: string,
@@ -363,54 +364,61 @@ const outsider_hybrids: classesAndOdds[] = [
     { classes: ["Assassin", "Ranger"], odds: 100},
 ]
 
-export const useBuildPack = function(): Record[] {
-    const cardData = useState('card-data').value as Record[]
-    const cardmap = useCardMap().value as CardMap[]
 
-    let pack: Record[] = []
-    if(cardData){
+export class PackBuilder {
+    private index = 0;
+    useBuildPack(): Pack {
+        const cardData = useState('card-data').value as Record[]
+        const cardmap = useCardMap().value as CardMap[]
+
+        let pack: Pack = {
+            index: this.index,
+            cards: []
+        }
+        this.index++;
+        if(cardData){
 
 
-    let ninjaCount = 0
-    let assassinCount = 0
-    let rangerCount = 0
-    pack.push(BuildCard(cardData, 0, "common", ["Generic"]))
-    pack.push(BuildCard(cardData, 1, "common", ["Generic"]))
-    pack.push(BuildCard(cardData, 2, "common", ["Generic"]))
-    pack.push(BuildCard(cardData, 3, "common", ["Ninja"]))
-    pack.push(BuildCard(cardData, 4, "common", ["Ranger"]))
-    pack.push(BuildCard(cardData, 5, "common", ["Ranger"]))
-    pack.push(BuildCard(cardData, 6, "common", ["Ninja"]))
-    pack.push(BuildCard(cardData, 7, "common", ["Assassin"]))
-    pack.push(BuildCard(cardData, 8, "common", ["Assassin"]))
-    const {classes: slot10_classes, rarity: slot10_rarity} = getHybrids(outsider_hybrids, slot10odds, 0)
-    pack.push(getCardTypesAndRarity(cardData, slot10_classes, slot10_rarity))
-    pack.push(getSlot11(cardData, outsider_hybrids, slot11odds, 0))
-    pack.push(getCardR(getRandomRarity(slot12odds,0), cardData))
-    const {classes: slot13_classes, rarity: slot13_rarity} = getConditionalClass([["Assassin", "Ninja", "Ranger"], useOutClasses], slot11odds, 0)
-    pack.push(getCardTR(slot13_classes, slot13_rarity, cardData))
-    pack.push(getEquipmentCard(cardData, "common"))
+        let ninjaCount = 0
+        let assassinCount = 0
+        let rangerCount = 0
+        pack.cards.push(BuildCard(cardData, 0, "common", ["Generic"]))
+        pack.cards.push(BuildCard(cardData, 1, "common", ["Generic"]))
+        pack.cards.push(BuildCard(cardData, 2, "common", ["Generic"]))
+        pack.cards.push(BuildCard(cardData, 3, "common", ["Ninja"]))
+        pack.cards.push(BuildCard(cardData, 4, "common", ["Ranger"]))
+        pack.cards.push(BuildCard(cardData, 5, "common", ["Ranger"]))
+        pack.cards.push(BuildCard(cardData, 6, "common", ["Ninja"]))
+        pack.cards.push(BuildCard(cardData, 7, "common", ["Assassin"]))
+        pack.cards.push(BuildCard(cardData, 8, "common", ["Assassin"]))
+        const {classes: slot10_classes, rarity: slot10_rarity} = getHybrids(outsider_hybrids, slot10odds, 0)
+        pack.cards.push(getCardTypesAndRarity(cardData, slot10_classes, slot10_rarity))
+        pack.cards.push(getSlot11(cardData, outsider_hybrids, slot11odds, 0))
+        pack.cards.push(getCardR(getRandomRarity(slot12odds,0), cardData))
+        const {classes: slot13_classes, rarity: slot13_rarity} = getConditionalClass([["Assassin", "Ninja", "Ranger"], useOutClasses], slot11odds, 0)
+        pack.cards.push(getCardTR(slot13_classes, slot13_rarity, cardData))
+        pack.cards.push(getEquipmentCard(cardData, "common"))
+        }
+        else console.log("Jesus hates you")
+
+        return pack;
     }
-    else console.log("Jesus hates you")
+    removeCard(cardPackId: Record, pack: Record[]): Record[] {
+        return pack.filter(card => card !== cardPackId)
+    }
 
-    return pack;
-}
+    getRandomCardID(pack: Record[]): Record | null {
+        const index=getRandomInt(pack.length,0)
+        const card = pack.at(index)
+        if(card) return card
+        else return null
+    }
 
-function removeCard(cardPackId: Record, pack: Record[]): Record[] {
-    return pack.filter(card => card !== cardPackId)
-}
+    removeRandomCard(pack: Record[]) {
+        this.removeCard(this.getRandomCardID(pack)!, pack)
+    }
 
-function getRandomCardID(pack: Record[]): Record | null {
-    const index=getRandomInt(pack.length,0)
-    const card = pack.at(index)
-    if(card) return card
-    else return null
-}
-
-function removeRandomCard(pack: Record[]) {
-    removeCard(getRandomCardID(pack)!, pack)
-}
-
-function getCard(card_pack_id:number, pack: Record[]): number | undefined {
-    return pack.at(card_pack_id)?.card_id
+    getCard(card_pack_id:number, pack: Record[]): number | undefined {
+        return pack.at(card_pack_id)?.card_id
+    }
 }

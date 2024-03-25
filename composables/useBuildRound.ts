@@ -1,56 +1,50 @@
 import { Record } from 'pocketbase'
-import {pack} from "~/composables/types/draft_types";
+import {Pack, Round} from "~/composables/types/draft_types";
+import {PackBuilder} from "~/composables/useBuildPack";
 
 type Box = {
     packs: Record[][]
 }
 
-function makePack(pack_id: number, cards: Record[]) {
-    return {
-        pack_id: pack_id,
-        cards: cards
+export class RoundBuilder {
+    private index = 0
+    private round: Round = {
+        index: this.index,
+        packs: []
+    };
+    makePack(pack_id: number, cards: Record[]) {
+        return {
+            pack_id: pack_id,
+            cards: cards
+        }
     }
-}
 
-export function useBuildRound() {
-    // check if all packs are depleted
-    //if(round.value.length === 0 || !round)
-    // load box from state
-    const draftBox = useState('draft-box').value as Record[][]
-    let round = [] as pack[]
-    // from box, put 8 packs into state
-        // get 8 packs from box
-        /*
-            pop 8 packs from box
-            push popped packs
-
-        */
-   for (let index = 0; index < 8; index++) {
-    console.log(round.push(
-            makePack(index, draftBox.pop() as Record[])
-        ))
-   }
-    useRoundStore().value = round
-    if(useRoundStore().value)
-        console.log(useRoundStore().value)
-    else
-    console.log("FAILED TO PUSH OR FAILED TO PRINT");
-}
+    useBuildRound(): Round {
+        // round array declaration
+        const packBuilder = new PackBuilder()
+        // propagate round
+        for (let i = 0; i < 8; i++) {
+            this.round.packs.push(packBuilder.useBuildPack())
+        }
+        // increment index
+        this.round.index = this.index++;
+        return this.round;
+    }
 
 
-function findIndex(pack: Record[], wanted_id: string) {
-    return pack.findIndex(card => card.id === wanted_id)
-}
-/*
-function that takes a pack_index and card id as imput
-load round from state
-from pack remove one and only one instance of a card whose id matches that of the input card id
-update state
-*/
-export function useRemovePick(pack_idx: number, card_id: string) {
-    const round = useRoundStore().value as unknown as Record[][]
-    const idx = findIndex(round[pack_idx], card_id)
-    if (idx > -1)  {
-        round[pack_idx].splice(idx, 1)
+    findIndex(pack: Pack, wanted_id: string) {
+        return pack.cards.findIndex(card => card.id === wanted_id)
+    }
+    /*
+    function that takes a pack_index and card id as imput
+    load round from state
+    from pack remove one and only one instance of a card whose id matches that of the input card id
+    update state
+    */
+    useRemovePick(pack_idx: number, card_id: string) {
+        const idx = this.findIndex(this.round.packs[pack_idx], card_id)
+        if (idx > -1)  {
+            this.round.packs[pack_idx].cards.splice(idx, 1)
+        }
     }
 }

@@ -1,7 +1,7 @@
 import { Record } from "pocketbase";
-
+import {Box} from "~/composables/types/draft_types";
+import {RoundBuilder} from "~/composables/useBuildRound";
 const allRecords = ref<Record[]>([])
-let box = [] as Record[][]
 
 const fetchData = async ()=> {
     try {
@@ -11,21 +11,21 @@ const fetchData = async ()=> {
         console.error(error)
     }
 }
-export async function useBuildDraft() {
+class Draft {
+    box: Box = {
+        rounds: []
+    }
+    async useBuildDraft() {
         // declare empty box
         // make 24 packs with a shared cardMap
         // append the packs to the box
         // return the box
         await fetchData()
-    const cardDataStore = useState('card-data', ()=> allRecords)
-    for (let i = 0; i < 24; i++) {
-        box.push(useBuildPack());
+        const roundBuiler = new RoundBuilder()
+        for (let i = 0; i < 3; i++) {
+            this.box.rounds.push(roundBuiler.useBuildRound());
+        }
+        const draftBox = useState('draft-box', () => this.box)
+        console.log(draftBox.value)
     }
-    /*
-    for (let i = 0; i<3; i++) {
-        box.push(useBuildRound());
-    }
-     */
-    const draftBox = useState('draft-box', ()=> box)
-    console.log(draftBox.value)
 }

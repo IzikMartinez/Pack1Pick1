@@ -1,10 +1,15 @@
 import {Record} from "pocketbase";
 
-export type pack = {
-    pack_id: number,
+export type Pack = {
+    index: number,
     cards: Record[]
 }
 
-export type round = {
-    packs: pack[]
+export type Round = {
+    index: number,
+    packs: Pack[]
+}
+
+export type Box = {
+    rounds: Round[]
 }
