@@ -27,8 +27,16 @@ const props = defineProps<{
   set_name: string
 }>()
 
-const thisdraft = useDraft()
+const cardDataStore = useState('card-data', () => data)
 const store = usePickStore()
+watch(
+    ()=> cardDataStore.value,
+    (newValue, oldValue) => {
+      console.log(newValue)
+      console.log(oldValue)
+    }
+)
+const thisdraft = useDraft()
 const timerStore = useTimerStore()
 const roundIndex = useRoundIndex().value
 

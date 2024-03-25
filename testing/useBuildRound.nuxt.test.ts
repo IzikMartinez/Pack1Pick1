@@ -1,8 +1,8 @@
-import { useBuildBox } from "~/composables/useBuildDraft"
+import { useBuildDraft } from "~/composables/useBuildDraft"
 import { useBuildRound } from "~/composables/useBuildRound"
 import { describe, it } from "vitest";
 
 it('Test draftbox state', ()=>{
-    useBuildBox()
+    useBuildDraft()
     console.log("OUTPUT: ", useBuildRound());
 })

@@ -366,8 +366,10 @@ const outsider_hybrids: classesAndOdds[] = [
 export const useBuildPack = function(): Record[] {
     const cardData = useState('card-data').value as Record[]
     const cardmap = useCardMap().value as CardMap[]
-    
+
     let pack: Record[] = []
+    if(cardData){
+
 
     let ninjaCount = 0
     let assassinCount = 0
@@ -388,6 +390,8 @@ export const useBuildPack = function(): Record[] {
     const {classes: slot13_classes, rarity: slot13_rarity} = getConditionalClass([["Assassin", "Ninja", "Ranger"], useOutClasses], slot11odds, 0)
     pack.push(getCardTR(slot13_classes, slot13_rarity, cardData))
     pack.push(getEquipmentCard(cardData, "common"))
+    }
+    else console.log("Jesus hates you")
 
     return pack;
 }

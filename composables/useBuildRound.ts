@@ -1,12 +1,8 @@
 import { Record } from 'pocketbase'
+import {pack} from "~/composables/types/draft_types";
 
 type Box = {
-    packs: Record[][]   
-}
-
-type pack = {
-    pack_id: number,
-    cards: Record[]
+    packs: Record[][]
 }
 
 function makePack(pack_id: number, cards: Record[]) {
@@ -29,11 +25,11 @@ export function useBuildRound() {
             push popped packs
 
         */
-       for (let index = 0; index < 8; index++) {
-        console.log(round.push(
-                makePack(index, draftBox.pop() as Record[])
-            ))
-       }
+   for (let index = 0; index < 8; index++) {
+    console.log(round.push(
+            makePack(index, draftBox.pop() as Record[])
+        ))
+   }
     useRoundStore().value = round
     if(useRoundStore().value)
         console.log(useRoundStore().value)
