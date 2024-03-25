@@ -2,11 +2,9 @@
   <NuxtLayout>
     <div id="card-box" >
       <transition name="cardbody" appear>
-        <span v-if="data === null">LOADING LOADING LOADING</span>
+        <span v-if="cardData=== null">LOADING LOADING LOADING</span>
         <span v-else>
-<!--
             <CardBox @cardbox-clicked="onCardEvent('clicked')" ref="cardboxRef" :set_name="SET_NAME"/>
--->
         </span>
       </transition>
     </div>
@@ -27,17 +25,7 @@ const draft = new Draft()
 const SET_NAME = route.params.id as string
 
 await draft.useBuildDraft()
-const {data, pending, error} = await useAsyncData('cards',
-  ()=> useRecords
-)
-const cardDataStore = useState('card-data', () => data)
-watch(
-    ()=> data.value,
-    (newValue, oldValue) => {
-      console.log(oldValue)
-      console.log(newValue)
-    }
-)
+const cardData = useState('card-data')
 const roundIndex = useRoundIndex()
 
 //console.log(useRoundStore().value);
