@@ -424,8 +424,8 @@ export class PackBuilder {
         else return null
     }
 
-    removeRandomCard(pack: Record[]) {
-        this.removeCard(this.getRandomCardID(pack)!, pack)
+    removeRandomCard() {
+        this.removeCard(this.getRandomCardID(this.pack.cards)!, this.pack.cards)
     }
 
     getCard(card_pack_id:number, pack: Record[]): number | undefined {

@@ -2,20 +2,22 @@ import {Pack, Round} from "~/composables/types/draft_types";
 import {PackBuilder} from "~/composables/useBuildPack";
 
 export class RoundBuilder {
-    private packs: PackBuilder[] = []
+    private packs: Round = {
+        packBuilders: []
+    }
     useBuildRound() {
         // round array declaration
         // propagate round
         for (let i = 0; i < 8; i++) {
-            this.packs.push(new PackBuilder(i))
+            this.packs.packBuilders.push(new PackBuilder(i))
         }
         // increment index
         return this.packs;
     }
 
 
-    findIndex(pack: PackBuilder, wanted_id: string) {
-        return pack.pack.cards.findIndex(card => card.id === wanted_id)
+    findIndex(packBuilder: PackBuilder, wanted_id: string) {
+        return packBuilder.pack.cards.findIndex(card => card.id === wanted_id)
     }
     /*
     function that takes a pack_index and card id as imput
@@ -24,9 +26,17 @@ export class RoundBuilder {
     update state
     */
     useRemovePick(pack_index: number, card_id: string) {
-        const idx = this.findIndex(this.packs[pack_index], card_id)
+        const idx = this.findIndex(this.packs.packBuilders[pack_index], card_id)
         if (idx > -1)  {
-            this.packs[pack_index].pack.cards.splice(idx, 1)
+            this.packs.packBuilders[pack_index].pack.cards.splice(idx, 1)
         }
+    }
+
+    removeCardFromPacks(current_pack: number) {
+        this.packs.packBuilders.forEach(packBuilder => {
+            if(packBuilder.pack.index != current_pack)
+                packBuilder.removeRandomCard()
+        })
+        //this.packs.filter(pack => pack.pack_id = pack_id)
     }
 }

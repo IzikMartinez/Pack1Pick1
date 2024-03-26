@@ -34,9 +34,9 @@ const timerStore = useTimerStore()
 //const cardDataStore = useState('card-data', () => data)
 const draft = new Draft()
 const roundIndex = useRoundIndex().value
-const currentRound =  computed(()=> draft.box.rounds[roundIndex])
+const currentRound =  computed(()=> draft.box.rounds[roundIndex]).value
 const current_pack_index = computed(()=>store.getPickIndex % PLAYER_NUM)
-const currentPack = computed(()=> currentRound.value.packs[current_pack_index.value])
+const currentPack = computed(()=> currentRound.packs[current_pack_index.value])
 
 const cardBoxClass = computed(()=> 'cardbox-' + useCardBoxClass().value)
 
@@ -53,7 +53,7 @@ function clickPick(card_in_pack: Record ) {
 }
 function pick(card_in_pack_id: Record) {
   currentPack.value.removePick(card_in_pack_id.id)
-  usePickCards(currentRound.value, currentPack.value.index)
+  usePickCards(currentRound.value.packs, currentPack.value.index)
   store.incrementIndex()
 }
 /*

@@ -1,5 +1,5 @@
-import Draft from "./draft";
 import Round from "./round";
+import {Draft} from "~/composables/useBuildDraft";
 
 export default class Picker {
     draft: Draft

@@ -1,4 +1,6 @@
 import {Record} from "pocketbase";
+import {PackBuilder} from "~/composables/useBuildPack";
+import {RoundBuilder} from "~/composables/useBuildRound";
 
 export type Pack = {
     index: number
@@ -6,9 +8,9 @@ export type Pack = {
 }
 
 export type Round = {
-    packs: Pack[]
+    packBuilders: PackBuilder[]
 }
 
 export type Box = {
-    rounds: Round[]
+    roundBuilders: RoundBuilder[]
 }
