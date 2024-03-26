@@ -16,7 +16,6 @@ export class Draft {
         // append the packs to the box
         // return the box
         for (let i = 0; i < 3; i++) {
-            const roundBuiler = new RoundBuilder()
             this.box.roundBuilders.push(new RoundBuilder());
         }
         const draftBox: Ref<Box> = useState('draft-box', () => this.box)
@@ -24,6 +23,7 @@ export class Draft {
         return draftBox;
     }
     pickFromRound(round_id: number, current_pack: number) {
-        this.box.rounds[round_id].removeCardFromPacks(current_pack)
+        this.box.roundBuilders[round_id].removeCardFromPacks(current_pack)
     }
+
 }

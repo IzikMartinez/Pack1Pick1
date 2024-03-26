@@ -5,16 +5,16 @@ export class RoundBuilder {
     private packs: Round = {
         packBuilders: []
     }
+    constructor() {
+        this.useBuildRound()
+    }
     useBuildRound() {
         // round array declaration
         // propagate round
         for (let i = 0; i < 8; i++) {
             this.packs.packBuilders.push(new PackBuilder(i))
         }
-        // increment index
-        return this.packs;
     }
-
 
     findIndex(packBuilder: PackBuilder, wanted_id: string) {
         return packBuilder.pack.cards.findIndex(card => card.id === wanted_id)

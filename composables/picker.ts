@@ -37,13 +37,17 @@ export default class Picker {
         return ids
     }
 
+
+    /*
     // remove card from each pack except the one currently focused
     allButActive(): Round[] {
-        return this.draft.Rounds.filter(round => round.round_id !== this.active_round)
+        return this.draft.box.roundBuilders.filter(round => round.round_id !== this.active_round)
     }
 
+     */
+
     removePick(round_id: number) {
-        let removal_round = this.draft.getRound(round_id)
+        //let removal_round = this.draft.getRound(round_id)
         // removal_pack = removal_round.filter(pack => packs.pack_id = this.id)
     }
 

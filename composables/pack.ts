@@ -12,7 +12,7 @@ export default class Pack {
 
     constructor(pack_id: number) {
         this.pack_id = pack_id
-        this.cards = this.buildPack() as Record[]
+        this.cards = this.buildPack().cards
     }
 
     get Cards() {
@@ -29,9 +29,9 @@ export default class Pack {
     }
 
 
-    buildPack(): Pack {
-        const packBuilder = new PackBuilder()
-        return packBuilder.useBuildPack(0)
+    buildPack() {
+        const packBuilder = new PackBuilder(0)
+        return packBuilder.pack
     }
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 4 METHODS
