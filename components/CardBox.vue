@@ -3,7 +3,7 @@
       <div>
         <DraftInfo class="fixed xl:(top-0 left-auto) top-18 left-24 justify-center" ref="infoRef"/>
         <span :class="cardBoxClass" >
-          <div v-for="card in currentPack.cards" :key="card.card_in_pack">
+          <div v-for="card in currentPack.pack.cards" :key="card.card_in_pack">
               <Card 
                 :card-props="card" 
                 :picked-flag="false"
@@ -34,14 +34,14 @@ const timerStore = useTimerStore()
 //const cardDataStore = useState('card-data', () => data)
 const draft = new Draft()
 const roundIndex = useRoundIndex().value
-const currentRound =  computed(()=> draft.box.rounds[roundIndex]).value
+const currentRound =  computed(()=> draft.box.roundBuilders[roundIndex]).value
 const current_pack_index = computed(()=>store.getPickIndex % PLAYER_NUM)
-const currentPack = computed(()=> currentRound.packs[current_pack_index.value])
+const currentPack = computed(()=> currentRound.packs.packBuilders[current_pack_index.value])
 
 const cardBoxClass = computed(()=> 'cardbox-' + useCardBoxClass().value)
 
 
-const picker: Picker = new Picker(thisdraft, roundIndex, current_pack_index.value)
+const picker: Picker = new Picker(draft, roundIndex, current_pack_index.value)
 const emit = defineEmits(['cardboxClicked'])
 defineExpose({ timeoutPick })
 function clickPick(card_in_pack: Record ) {
@@ -53,8 +53,19 @@ function clickPick(card_in_pack: Record ) {
 }
 function pick(card_in_pack_id: Record) {
   currentPack.value.removePick(card_in_pack_id.id)
-  usePickCards(currentRound.value.packs, currentPack.value.index)
+  usePickCards(currentRound.packs.packBuilders, currentPack.value.index)
   store.incrementIndex()
+}
+function timeoutPick() {
+  timerStore.setTimer(store.getInversePickIndex)
+  const idx = getRandomInt(currentPack.value.pack.cards.length, 0)
+  pick(currentPack.value.pack.cards.at(idx)!)
+}
+
+function getRandomInt(max: number, min: number): number {
+  let num = Math.floor(Math.random() * max)// start at 1
+  return num
+  //return this.lcg(21, 3, 7, seed, 3)[1] % max
 }
 /*
 const thisDraft = useState('draft-box').value
@@ -67,17 +78,7 @@ console.log(current_pack.value)
 
 
 
-function getRandomInt(max: number, min: number): number {
-        let num = Math.floor(Math.random() * max)// start at 1
-        return num
-        //return this.lcg(21, 3, 7, seed, 3)[1] % max
-    }
 
-function timeoutPick() {
-  timerStore.setTimer(store.getInversePickIndex)
-  const idx = getRandomInt(current_pack.value!.Cards.length, 0)
-  pick(current_pack.value?.Cards.at(idx)!)
-}
 
 
 

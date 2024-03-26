@@ -2,7 +2,7 @@ import {Pack, Round} from "~/composables/types/draft_types";
 import {PackBuilder} from "~/composables/useBuildPack";
 
 export class RoundBuilder {
-    private packs: Round = {
+    packs: Round = {
         packBuilders: []
     }
     constructor() {
