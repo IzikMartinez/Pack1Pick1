@@ -29,8 +29,9 @@ export default class Pack {
     }
 
 
-    buildPack(): Record[] {
-        return useBuildPack();
+    buildPack(): Pack {
+        const packBuilder = new PackBuilder()
+        return packBuilder.useBuildPack(0)
     }
     ////////////////////////////////////////////////////////////////////////////
     // LAYER 4 METHODS
@@ -42,7 +43,7 @@ export default class Pack {
         this.cards = this.cards.filter(card => card.id !== cardId)
     }
 
-    removePick(card_id: string) {  
+    removePick(card_id: string) {
         let index = this.cards.findIndex(card => card.id === card_id)
         if (index > -1)  {
             this.picked_cards.push(this.cards.splice(index, 1)[0])

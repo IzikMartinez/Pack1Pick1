@@ -366,41 +366,55 @@ const outsider_hybrids: classesAndOdds[] = [
 
 
 export class PackBuilder {
-    useBuildPack(): Pack {
+    pack: Pack = {
+        index: 0,
+        cards: [] as Record[]
+    }
+    pickedCards: Pack = {
+        index: 0,
+        cards: [] as Record[]
+    }
+    constructor(inputIndex: number) {
+        this.useBuildPack(inputIndex)
+    }
+    useBuildPack(inputIndex: number): Pack {
         const cardData = useState('card-data').value as Record[]
         const cardmap = useCardMap().value as CardMap[]
 
-        let pack: Pack = {
-            cards: []
-        }
         if(cardData){
-
         let ninjaCount = 0
         let assassinCount = 0
         let rangerCount = 0
-        pack.cards.push(BuildCard(cardData, 0, "common", ["Generic"]))
-        pack.cards.push(BuildCard(cardData, 1, "common", ["Generic"]))
-        pack.cards.push(BuildCard(cardData, 2, "common", ["Generic"]))
-        pack.cards.push(BuildCard(cardData, 3, "common", ["Ninja"]))
-        pack.cards.push(BuildCard(cardData, 4, "common", ["Ranger"]))
-        pack.cards.push(BuildCard(cardData, 5, "common", ["Ranger"]))
-        pack.cards.push(BuildCard(cardData, 6, "common", ["Ninja"]))
-        pack.cards.push(BuildCard(cardData, 7, "common", ["Assassin"]))
-        pack.cards.push(BuildCard(cardData, 8, "common", ["Assassin"]))
+        this.pack.index = inputIndex
+        this.pack.cards.push(BuildCard(cardData, 0, "common", ["Generic"]))
+        this.pack.cards.push(BuildCard(cardData, 1, "common", ["Generic"]))
+        this.pack.cards.push(BuildCard(cardData, 2, "common", ["Generic"]))
+        this.pack.cards.push(BuildCard(cardData, 3, "common", ["Ninja"]))
+        this.pack.cards.push(BuildCard(cardData, 4, "common", ["Ranger"]))
+        this.pack.cards.push(BuildCard(cardData, 5, "common", ["Ranger"]))
+        this.pack.cards.push(BuildCard(cardData, 6, "common", ["Ninja"]))
+        this.pack.cards.push(BuildCard(cardData, 7, "common", ["Assassin"]))
+        this.pack.cards.push(BuildCard(cardData, 8, "common", ["Assassin"]))
         const {classes: slot10_classes, rarity: slot10_rarity} = getHybrids(outsider_hybrids, slot10odds, 0)
-        pack.cards.push(getCardTypesAndRarity(cardData, slot10_classes, slot10_rarity))
-        pack.cards.push(getSlot11(cardData, outsider_hybrids, slot11odds, 0))
-        pack.cards.push(getCardR(getRandomRarity(slot12odds,0), cardData))
+        this.pack.cards.push(getCardTypesAndRarity(cardData, slot10_classes, slot10_rarity))
+        this.pack.cards.push(getSlot11(cardData, outsider_hybrids, slot11odds, 0))
+        this.pack.cards.push(getCardR(getRandomRarity(slot12odds,0), cardData))
         const {classes: slot13_classes, rarity: slot13_rarity} = getConditionalClass([["Assassin", "Ninja", "Ranger"], useOutClasses], slot11odds, 0)
-        pack.cards.push(getCardTR(slot13_classes, slot13_rarity, cardData))
-        pack.cards.push(getEquipmentCard(cardData, "common"))
+        this.pack.cards.push(getCardTR(slot13_classes, slot13_rarity, cardData))
+        this.pack.cards.push(getEquipmentCard(cardData, "common"))
         }
         else console.log("Jesus hates you")
 
-        return pack;
+        return this.pack;
     }
     removeCard(cardPackId: Record, pack: Record[]): Record[] {
         return pack.filter(card => card !== cardPackId)
+    }
+    removePick(card_id: string) {
+        let index = this.pack.cards.findIndex(card => card.id === card_id)
+        if (index > -1)  {
+            this.pickedCards.cards.push(this.pack.cards.splice(index, 1)[0])
+        }
     }
 
     getRandomCardID(pack: Record[]): Record | null {

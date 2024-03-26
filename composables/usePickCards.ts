@@ -1,7 +1,8 @@
-import Round from "./round";
+import {Round} from "~/composables/types/draft_types";
+import {PackBuilder} from "~/composables/useBuildPack";
 
-export function usePickCards(round: Round, pack_id: number) { 
-    round.Packs.filter(pack => pack.pack_id !== pack_id).forEach(pack =>
-        pack.removeRandomCard()
+export function usePickCards(round: PackBuilder[], pack_id: number) {
+    const picks = round.filter(pack => pack.pack.index == pack_id)
+        .forEach(pack => pack.removeRandomCard())
     )
 }

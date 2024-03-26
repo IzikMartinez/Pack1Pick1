@@ -1,6 +1,7 @@
 import {Record} from "pocketbase";
 
 export type Pack = {
+    index: number
     cards: Record[]
 }
 

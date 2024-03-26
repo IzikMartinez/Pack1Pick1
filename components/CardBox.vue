@@ -52,8 +52,8 @@ function clickPick(card_in_pack: Record ) {
   }
 }
 function pick(card_in_pack_id: Record) {
-  currentPack.value?.removePick(card_in_pack_id.id)
-  usePickCards(roundIndex)!, current_pack.value!.pack_id)
+  currentPack.value.removePick(card_in_pack_id.id)
+  usePickCards(currentRound.value, currentPack.value.index)
   store.incrementIndex()
 }
 /*
