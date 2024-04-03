@@ -21,6 +21,7 @@
 import { Record } from 'pocketbase';
 import Picker from '~~/composables/picker';
 import {Draft} from "~/composables/useBuildDraft";
+import {usePickCards} from "~/composables/usePickCards";
 
 const PACK_SIZE=14
 const PLAYER_NUM=7
@@ -28,6 +29,7 @@ const PLAYER_NUM=7
 const props = defineProps<{
   set_name: string
 }>()
+
 
 const store = usePickStore()
 const timerStore = useTimerStore()
@@ -48,12 +50,12 @@ function clickPick(card_in_pack: Record ) {
   if(card_in_pack != null) {
     emit('cardboxClicked')
     timerStore.setTimer(store.getInversePickIndex)
-    pick(card_in_pack)
+    pickCard(card_in_pack)
   }
 }
-function pick(card_in_pack_id: Record) {
+function pickCard(card_in_pack_id: Record) {
   currentPack.value.removePick(card_in_pack_id.id)
-  usePickCards(currentRound.packs.packBuilders, currentPack.value.index)
+  usePickCards(currentRound.packs.packBuilders, currentPack.value.pack.index)
   store.incrementIndex()
 }
 function timeoutPick() {

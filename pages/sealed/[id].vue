@@ -3,8 +3,7 @@
         <div v-if="pending">Loading..</div>
         <div v-else class="flex fixed w-screen h-screen top-14 left-16 items-center justify-end">
           <div class="flex flex-wrap flex-1 h-full overflow-y-scroll overflow-x-hidden hide-scrollbar z-0 items-center justify-center">
-            <span v-for="card in searchPicks"
-                 @dragstart="startDrag($event, card)">
+            <span v-for="card in searchPicks" @dragstart="startDrag($event, card)">
                 <Card :card-props="card" :picked-flag="true"/>
             </span>
           </div>
@@ -15,7 +14,7 @@
 
 <script setup lang="ts">
 import { Record } from 'pocketbase';
-import Pack from '~~/composables/pack';
+import {Pack} from '~~/composables/types/draft_types'
 
 const route = useRoute()
 const picks = usePickStore()
@@ -37,15 +36,17 @@ function startDrag(event: DragEvent, pick: Record) {
 }
 
 onBeforeMount(()=>{
+    const packBuilder = new PackBuilder(0)
     const packs = computed(()=>{
-        let pack = [[]] as [Record[]]
+        //let pack = [[]] as [Record[]]
+        let sealedPacks = [] as Pack[]
         for(var i = 0; i<6; i++) {
-            pack.push(useBuildPack())
+            sealedPacks.push(packBuilder.useBuildPack(i))
         }
-        return pack
+        return sealedPacks
     })
     packs.value.forEach(
-        pack => pack.forEach(card => picks.addPick(card as Record)))
+        pack => pack.cards.forEach(card => picks.addPick(card as Record)))
 })
 </script>
 

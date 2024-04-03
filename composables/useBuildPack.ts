@@ -413,7 +413,7 @@ export class PackBuilder {
     removePick(card_id: string) {
         let index = this.pack.cards.findIndex(card => card.id === card_id)
         if (index > -1)  {
-            this.pickedCards.cards.push(this.pack.cards.splice(index, 1)[0])
+            this.pack.cards.splice(index, 1)
         }
     }
 
