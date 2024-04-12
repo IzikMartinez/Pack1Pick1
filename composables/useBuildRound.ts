@@ -15,9 +15,8 @@ export class RoundBuilder {
             this.packs.packBuilders.push(new PackBuilder(i))
         }
     }
-
     findIndex(packBuilder: PackBuilder, wanted_id: string) {
-        return packBuilder.pack.cards.findIndex(card => card.id === wanted_id)
+        return packBuilder.pack.cards.findIndex(card => card.record.id === wanted_id)
     }
     /*
     function that takes a pack_index and card id as imput
@@ -30,6 +29,18 @@ export class RoundBuilder {
         if (idx > -1)  {
             this.packs.packBuilders[pack_index].pack.cards.splice(idx, 1)
         }
+    }
+
+    removeCardFromAll() {
+        this.packs.packBuilders.forEach(pack => pack.removeRandomCard())
+    }
+
+    removeCardFromAllButActive(pack_id: number) {
+        this.packs.packBuilders.forEach(pack => {
+            if (pack.pack.index !== pack_id) {
+                pack.removeRandomCard()
+            }
+        })
     }
 
     removeCardFromPacks(current_pack: number) {

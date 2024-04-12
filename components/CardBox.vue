@@ -56,6 +56,7 @@ function clickPick(card_in_pack: Record ) {
 function pickCard(card_in_pack_id: Record) {
   currentPack.value.removePick(card_in_pack_id.id)
   usePickCards(currentRound.packs.packBuilders, currentPack.value.pack.index)
+  currentRound.removeCardFromAllButActive(currentPack.value.pack.index)
   store.incrementIndex()
 }
 function timeoutPick() {

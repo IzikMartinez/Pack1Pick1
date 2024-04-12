@@ -3,7 +3,7 @@
   It will return "card" by default.  -->
   <div :class="cardClass" @click="addPick">
       <CardTooltip group-hover="xl:scale-100 scale-0 z-0 delay-700" :card-props="cardProps"/>
-      <CardImage :record_id="cardProps" :card_name="cardProps.card_name" :cart_art="cardProps.card_art"/>
+      <CardImage :record_id="cardProps.record" :card_name="cardProps.record.card_name" :cart_art="cardProps.record.card_art"/>
   </div>
 
 </template>
@@ -11,15 +11,16 @@
 <script setup lang="ts">
 import { Record } from 'pocketbase';
 import {watch} from "@vue/runtime-core";
+import {Card} from "~/composables/types/draft_types";
 
 const picks = usePickStore()
 const props = defineProps<{
-  cardProps: Record 
+  cardProps: Card
   pickedFlag: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'cardClicked', type: Record): void
+  (e: 'cardClicked', type: Card): void
 }>()
 
 const cardClass = computed(()=>'card-' +useCardClass().value )
@@ -28,11 +29,11 @@ const artPath = ref("")
 
 function addPick() {
   if (props.pickedFlag === true) {
-    console.log("Cannot add ", props.cardProps.card_name, " As it has already been picked.")
+    console.log("Cannot add ", props.cardProps.record.card_name, " As it has already been picked.")
   }
   else {
     picks.addPick(props.cardProps)
-    console.log("Added ", props.cardProps.card_name, " (", props.cardProps.pitch, ")")
+    console.log("Added ", props.cardProps.record.card_name, " (", props.cardProps.record.pitch, ")")
   }
   emit('cardClicked', props.cardProps)
 }
