@@ -1,7 +1,16 @@
-node_modules
-*.log*
+# Folders
 .nuxt
+node_modules
 .nitro
-.cache
 .output
+.idea
+.vscode
+
+# Files
+.mailmap
+*.log*
+.cache
 dist
+
+# Secrets
+*.env
